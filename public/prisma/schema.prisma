@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PRISMA_DATABASE_URL")
+}
+
+model PageItem {
+  id        Int     @id @default(autoincrement())
+  alias     String? @unique @db.VarChar(255)
+  title     String  @unique @db.VarChar(255)
+  anonce    String?
+  content   String
+  public_at DateTime  @default(now())
+}
+
+model PageCategory {
+  id          Int     @id @default(autoincrement())
+  parent_id   Int     @default(0)
+  alias       String? @unique @db.VarChar(255)
+  title       String  @unique @db.VarChar(255)
+  description String
+}
+
+model BooleanMeta {
+  id          Int     @id @default(autoincrement())
+  type        String  @db.VarChar(10)
+  extend_id   Int
+  is_active   Boolean @default(true)
+  is_deleted  Boolean @default(false)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+
+  @@unique([type, extend_id])
+}
